@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agl-ratings-adapter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agl-ratings-adapter
+  template:
+    metadata:
+      labels:
+        app: agl-ratings-adapter
+    spec:
+      containers:
+        - name: agl-ratings-adapter
+          image: agl-ratings-adapter:latest
+          imagePullPolicy: Never

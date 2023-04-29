@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: agl-ratings-adapter
+spec:
+  selector:
+    app: agl-ratings-adapter
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

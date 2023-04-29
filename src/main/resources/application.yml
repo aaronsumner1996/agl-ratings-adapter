@@ -5,3 +5,19 @@ netty:
   default:
     allocator:
       max-order: 3
+
+flyway:
+  datasources:
+    default:
+      locations: classpath:/db/migration
+      baseline-on-migrate: false
+      validate-on-migrate: true
+
+datasources:
+  default:
+    url: ${PG_JDBC_URL:`jdbc:postgresql://10.107.242.169/gameratings`}
+    username: ${PG_USERNAME:amsumner}
+    password: ${PG_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    schema-generate: NONE
+    dialect: POSTGRES
