@@ -16,6 +16,12 @@ public class RatingsDao extends AbstractDao {
                 "gameSlug", gameSlug, "userId", userId);
     }
 
+    @TransactionalAdvice
+    public Double getAverageRating(final String gameSlug) throws Exception {
+        return findOne("SELECT AVG(rating) FROM RatingsEntity ratings WHERE ratings.gameSlug=:gameSlug",
+                Double.class,
+                "gameSlug", gameSlug);
+    }
 
     @TransactionalAdvice
     @Transactional

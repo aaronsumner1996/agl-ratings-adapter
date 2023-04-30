@@ -10,6 +10,8 @@ import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,9 +34,9 @@ public class RatingsService {
 
         RatingsEntity ratings = getRatingsEntity(userId, gameSlug, rating);
 
-        log.info("Checking is Rating exists for User");
+        log.info("Checking if rating exists for User");
         if (checkForExistingRating(ratings)) {
-            log.info("Rating Updated Sucessfully");
+            log.info("Rating Updated Successfully");
         } else {
             ratingsDao.create(ratings);
         }
@@ -52,7 +54,7 @@ public class RatingsService {
 
     private void checkRatingFormat(BigDecimal rating) {
         if ((rating.compareTo(BigDecimal.valueOf(5)) > 0) || (rating.compareTo(BigDecimal.ZERO) <= 0)) {
-            throw new HttpStatusException(HttpStatus.BAD_REQUEST, "rating exceeds 5.00");
+            throw new HttpStatusException(HttpStatus.BAD_REQUEST, "Rating is not in range of 0-5");
         }
     }
 
@@ -71,7 +73,6 @@ public class RatingsService {
                         .build();
 
                 ratingsDao.update(newRating);
-
                return true;
             } else {
                 log.info("Rating does not exist");
@@ -83,4 +84,13 @@ public class RatingsService {
         }
     }
 
+    public BigDecimal retrieveGameRating(String gameSlug) {
+        try {
+            Double rating = ratingsDao.getAverageRating(gameSlug);
+            return BigDecimal.valueOf(rating).setScale(1, RoundingMode.HALF_UP);
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            throw new HttpStatusException(HttpStatus.BAD_GATEWAY, "Could not fetch Rating: [{}]");
+        }
+    }
 }
